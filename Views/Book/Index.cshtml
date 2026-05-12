@@ -1,0 +1,53 @@
+﻿@using LibraryManagementSystem.Dto
+@model List<BookDto>
+<div style="color: red;">@ViewBag.ErrorMessage</div>
+<div style="color: green;">@ViewBag.SuccessMessage</div>
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        
+        <h3 class="m-0">Book Dashboard</h3>
+        <a class="btn btn-success" asp-action="RedirectToBookForm">+ Add Book</a>
+    </div>
+
+    <div class="card shadow p-3">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Genre</th>
+                    <th>Publication Date</th>
+                    <th>Author</th>
+                    <th style="width: 150px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    if(Model != null && Model.Count > 0)
+                    {
+                        foreach (BookDto book in Model)
+                        {
+                            <tr>
+                                <td>@book.Title</td>
+                                <td>@book.Genre</td>
+                                <td>@book.PublicationDate</td>
+                                <td>@book.Author</td>
+                                <td>
+                                    <a class="btn btn-sm btn-primary" asp-action="UpdateBook" asp-route-id="@book.Id">Edit </a>
+                                    <a class="btn btn-sm btn-danger" asp-action="DeleteBook" asp-route-id="@book.Id">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No books found.</td>
+                        </tr>
+                    }
+                }                
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -1,0 +1,42 @@
+# .NET Core
+bin/
+obj/
+
+# Visual Studio
+*.user
+*.suo
+*.tmp
+*.log
+
+# NuGet
+packages/
+*.nupkg
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+
+# Test results
+TestResults/
+
+# Coverage
+*.coverage
+
+# ASP.NET Core
+wwwroot/lib/
+
+# Entity Framework
+*.db
+*.db-shm
+*.db-wal
+
+# Secrets
+appsettings.Development.json

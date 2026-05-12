@@ -1,0 +1,34 @@
+﻿@using LibraryManagementSystem.Dto
+@model AuthorDto
+<div>@ViewBag.ErrorMessage</div>
+</div>
+<form class="container d-flex justify-content-center align-items-center" style="min-height: 100vh" asp-action="CreateAuthor">
+    <div class="card p-4 shadow" style="width: 100%; max-width: 400px">
+        
+        <h3 class="text-center mb-4">Add Author</h3>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" asp-for="Name" placeholder="Enter name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" name="email" asp-for="Email" placeholder="Enter email" required>
+
+        </div>
+        
+        <div class="mb-3">
+            <label for="rating" class="form-label">Rating</label>
+            <input type="number" step="0.01" class="form-control" id="rating" name="rating" asp-for="Rating" placeholder="Enter rating" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="bio" class="form-label">Bio</label>
+            <input type="text" class="form-control" id="bio" name="bio" asp-for="Bio" placeholder="Enter bio" required>
+        </div>
+
+        <input type="submit" class="btn btn-primary w-100" value="Submit"/>
+    </div>
+</form>
+Cancel Add <a asp-controller="Author" asp-action="Index">Back to List</a>

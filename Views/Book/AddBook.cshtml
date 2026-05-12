@@ -1,0 +1,39 @@
+@using LibraryManagementSystem.Dto
+@model BookDto
+<div>@ViewBag.ErrorMessage</div>
+</div>
+<form class="container d-flex justify-content-center align-items-center" style="min-height: 100vh" asp-action="CreateBook">
+    <div class="card p-4 shadow" style="width: 100%; max-width: 400px">
+        
+        <h3 class="text-center mb-4">Add Book</h3>
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" asp-for="Title" placeholder="Enter title" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="genre" class="form-label">Genre</label>
+            <input type="text" class="form-control" id="genre" name="genre" asp-for="Genre" placeholder="Enter genre" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="publicationDate" class="form-label">Publication Date</label>
+            <input type="date" class="form-control" id="publicationDate" name="publicationDate" asp-for="PublicationDate" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="author" class="form-label">Author</label>
+            <input type="text" class="form-control" id="author" name="author" asp-for="Author" placeholder="Enter author" required>
+
+        </div>
+        
+        <div class="mb-3">
+            <label for="rating" class="form-label">Rating</label>
+            <input type="number" step="0.01" class="form-control" id="rating" name="rating" asp-for="Rating" placeholder="Enter rating" required>
+        </div>
+
+        <input type="submit" class="btn btn-primary w-100" value="Submit"/>
+    </div>
+</form>
+Cancel Add <a asp-controller="Book" asp-action="Index">Back to List</a>
