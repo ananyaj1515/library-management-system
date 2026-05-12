@@ -16,7 +16,8 @@ namespace LibraryManagementSystem.Controllers
             {
                 Id = b.Id,
                 Title = b.Title,
-                Author = b.Author,
+                AuthorId = b.AuthorId,
+                AuthorName = b.Author.Name,
                 Rating = b.Rating,
                 PublicationDate = b.PublicationDate,
                 Genre = b.Genre
@@ -31,15 +32,17 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> CreateBook(BookDto bookDto)
         {
-           if (bookDto == null || string.IsNullOrEmpty(bookDto.Title) || string.IsNullOrEmpty(bookDto.Author))
+           if (bookDto == null || string.IsNullOrEmpty(bookDto.Title) || bookDto.AuthorId == 0)
             {
+                ViewBag.Authors = _context.Authors.ToList();
                 ViewBag.ErrorMessage = "Title and Author are required.";
                 return View("AddBook");
             }
-
-            var existingBook = _context.Books.FirstOrDefault(b => b.Title == bookDto.Title && b.Author == bookDto.Author);
+var
+             existingBook = _context.Books.FirstOrDefault(b => b.Title == bookDto.Title && b.AuthorId == bookDto.AuthorId);
             if (existingBook != null)
             {
+                ViewBag.Authors = _context.Authors.ToList();
                 ViewBag.ErrorMessage = "Book with this title and author already exists.";
                 return View("AddBook");
             } else
@@ -47,7 +50,7 @@ namespace LibraryManagementSystem.Controllers
                 var newBook = new Book
                 {
                     Title = bookDto.Title,
-                    Author = bookDto.Author,
+                    AuthorId = bookDto.AuthorId,
                     Rating = bookDto.Rating,
                     PublicationDate = bookDto.PublicationDate,
                     Genre = bookDto.Genre
@@ -84,7 +87,7 @@ namespace LibraryManagementSystem.Controllers
             {
                 Id = book.Id,
                 Title = book.Title,
-                Author = book.Author,
+                AuthorId = book.AuthorId,
                 Rating = book.Rating,
                 PublicationDate = book.PublicationDate,
                 Genre = book.Genre
@@ -93,7 +96,7 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> UpdateBookDetail(BookDto bookDto)
         {
-            if (bookDto == null || string.IsNullOrEmpty(bookDto.Title) || string.IsNullOrEmpty(bookDto.Author))
+            if (bookDto == null || string.IsNullOrEmpty(bookDto.Title) || bookDto.AuthorId == 0)
             {
                 ViewBag.ErrorMessage = "Title and Author are required";
                 return View("UpdateBook", bookDto);
@@ -107,7 +110,7 @@ namespace LibraryManagementSystem.Controllers
             }
            
             book.Title = bookDto.Title;
-            book.Author = bookDto.Author;   
+            book.AuthorId = bookDto.AuthorId;
             book.Rating = bookDto.Rating;
             book.PublicationDate = bookDto.PublicationDate;
             book.Genre = bookDto.Genre;
