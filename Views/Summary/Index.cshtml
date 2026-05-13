@@ -1,1 +1,19 @@
-<p>Perform your search queries here.</p>
+@using LibraryManagementSystem.Models
+@model Summary
+<div class="container justify-content-center" style="min-height: 100vh"> 
+    <div class="card p-4 shadow" style="width: 100%; max-width: 600px">
+        <h1 class="text-center mb-4">Counting Statistics</h1>
+        <div class="d-flex flex-row justify-content-center align-items-center gap-3">
+            <div class="btn btn-lg btn-primary mb-3">@Model.TotalBooks Books</div>
+            <div class="btn btn-lg btn-danger mb-3">@Model.TotalAuthors Authors</div>
+            <div class="btn btn-lg btn-success mb-3">@Model.TotalGenres Genres</div>
+        </div>
+    </div>
+    <div class="card p-4 shadow" style="width: 100%; max-width: 600px">
+         <h1 class="text-center mb-4">Top Rated</h1>
+        <div class="d-flex flex-row justify-content-center align-items-center gap-3">
+            <div class="btn btn-lg btn-primary mb-3">Top Rated Author: @Model.TopRatedAuthor</div>
+            <div class="btn btn-lg btn-success mb-3">Top Rated Book: @Model.TopRatedBook</div>
+        </div>
+    </div>
+</div>
