@@ -1,10 +1,8 @@
 using LibraryManagementSystem.Data;
 using LibraryManagementSystem.Dto;
-using LibraryManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace LibraryManagementSystem.Controllers
 {
