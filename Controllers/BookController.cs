@@ -2,6 +2,8 @@ using LibraryManagementSystem.Data;
 using LibraryManagementSystem.Dto;
 using LibraryManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -12,15 +14,9 @@ namespace LibraryManagementSystem.Controllers
     
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
-             var books = _context.Books.Select( b => new BookDto
-            {
-                Id = b.Id,
-                Title = b.Title,
-                Author = b.Author,
-                Rating = b.Rating,
-                PublicationDate = b.PublicationDate,
-                Genre = b.Genre
-            }).ToList();
+            var books = _context.Database.SqlQueryRaw<BookDto>(
+                "SELECT Id, Title, Genre, PublicationDate, Rating, Author FROM Books"
+            ).ToList();
             return View(books);
         }
 
@@ -37,23 +33,28 @@ namespace LibraryManagementSystem.Controllers
                 return View("AddBook");
             }
 
-            var existingBook = _context.Books.FirstOrDefault(b => b.Title == bookDto.Title && b.Author == bookDto.Author);
-            if (existingBook != null)
+            var existingBook = _context.Database.SqlQueryRaw<BookDto>(
+                "SELECT * FROM Books WHERE Title = {0} AND Author = {1}",
+                new SqlParameter("@Title", bookDto.Title),
+                new SqlParameter("@Author", bookDto.Author)
+            ).ToList();
+            
+            if (existingBook.Count > 0)
             {
                 ViewBag.ErrorMessage = "Book with this title and author already exists.";
                 return View("AddBook");
-            } else
+            } 
+            else
             {
-                var newBook = new Book
-                {
-                    Title = bookDto.Title,
-                    Author = bookDto.Author,
-                    Rating = bookDto.Rating,
-                    PublicationDate = bookDto.PublicationDate,
-                    Genre = bookDto.Genre
-                };
-                _context.Books.Add(newBook);
-                await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlRawAsync(
+                    "INSERT INTO Books (Title, Author, Genre, PublicationDate, Rating) VALUES({0}, {1}, {2}, {3}, {4})",
+                    new SqlParameter("@Title", bookDto.Title),
+                    new SqlParameter("@Author", bookDto.Author),
+                    new SqlParameter("@Genre", bookDto.Genre),
+                    new SqlParameter("@PublicationDate", bookDto.PublicationDate),
+                    new SqlParameter("@Rating", bookDto.Rating)
+                );
+               
                 TempData["SuccessMessage"] = "Book added successfully.";
                 return RedirectToAction("Index");
             }
@@ -61,11 +62,17 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> DeleteBook(int id)
         {
-            var book = _context.Books.FirstOrDefault(b => b.Id == id);
+            var book = _context.Database.SqlQueryRaw<BookDto>(
+                "SELECT * FROM Books WHERE Id = {0}",
+                new SqlParameter("@Id", id)
+            ).ToList().FirstOrDefault();
+            
             if (book != null)
             {
-                _context.Books.Remove(book);
-                await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlRawAsync(
+                    "DELETE FROM Books WHERE Id = {0}",
+                    new SqlParameter("@Id", id)
+                );
             }
             TempData["SuccessMessage"] = "Book deleted successfully";
             return RedirectToAction("Index");
