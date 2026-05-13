@@ -15,41 +15,47 @@ namespace LibraryManagementSystem.Controllers
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
             var books = _context.Database.SqlQueryRaw<BookDto>(
-                "SELECT Id, Title, Genre, PublicationDate, Rating, Author FROM Books"
+                "SELECT b.Id, b.Title, b.Genre, b.PublicationDate, b.Rating, b.AuthorId, a.Name AS AuthorName " +
+                "FROM Books b " + 
+                "INNER JOIN Authors a ON a.Id = b.AuthorID"
             ).ToList();
             return View(books);
         }
 
         public IActionResult RedirectToBookForm()
         {
+            populateAuthorsInViewBag();
             return View("AddBook");
         }
 
         public async Task<IActionResult> CreateBook(BookDto bookDto)
         {
-           if (bookDto == null || string.IsNullOrEmpty(bookDto.Title) || string.IsNullOrEmpty(bookDto.Author))
+           if (bookDto == null || string.IsNullOrEmpty(bookDto.Title) || bookDto.AuthorId == 0)
             {
                 ViewBag.ErrorMessage = "Title and Author are required.";
+                populateAuthorsInViewBag();
                 return View("AddBook");
             }
 
             var existingBook = _context.Database.SqlQueryRaw<BookDto>(
-                "SELECT * FROM Books WHERE Title = {0} AND Author = {1}",
+                "SELECT Id, Title, Genre, PublicationDate, Rating, AuthorID, NULL AS AuthorName from Books " +
+                "WHERE Title = {0} AND AuthorID = {1}",
                 new SqlParameter("@Title", bookDto.Title),
-                new SqlParameter("@Author", bookDto.Author)
+                new SqlParameter("@AuthorID", bookDto.AuthorId)
             ).ToList();
             
             if (existingBook.Count > 0)
             {
                 ViewBag.ErrorMessage = "Book with this title and author already exists.";
+                populateAuthorsInViewBag();
                 return View("AddBook");
             } 
             else
             {
                 await _context.Database.ExecuteSqlRawAsync(
-                    "INSERT INTO Books (Title, Author, Genre, PublicationDate, Rating) VALUES({0}, {1}, {2}, {3}, {4})",
+                    "INSERT INTO Books (Title, AuthorId, Genre, PublicationDate, Rating) VALUES({0}, {1}, {2}, {3}, {4})",
                     new SqlParameter("@Title", bookDto.Title),
-                    new SqlParameter("@Author", bookDto.Author),
+                    new SqlParameter("@AuthorID", bookDto.AuthorId),
                     new SqlParameter("@Genre", bookDto.Genre),
                     new SqlParameter("@PublicationDate", bookDto.PublicationDate),
                     new SqlParameter("@Rating", bookDto.Rating)
@@ -63,7 +69,7 @@ namespace LibraryManagementSystem.Controllers
         public async Task<IActionResult> DeleteBook(int id)
         {
             var book = _context.Database.SqlQueryRaw<BookDto>(
-                "SELECT * FROM Books WHERE Id = {0}",
+                "SELECT Id, Title, Genre, PublicationDate, Rating, AuthorId, NULL AS AuthorName FROM Books WHERE Id = {0}",
                 new SqlParameter("@Id", id)
             ).ToList().FirstOrDefault();
             
@@ -79,22 +85,25 @@ namespace LibraryManagementSystem.Controllers
         }
 
         public async Task<IActionResult> UpdateBook(BookDto bookDto) {
+
             var book = _context.Database.SqlQueryRaw<BookDto>(
-                "SELECT * FROM Books WHERE Id = {0}",
+                "SELECT Id, Title, Genre, PublicationDate, Rating, AuthorId, NULL AS AuthorName FROM Books WHERE Id = {0}",
                 new SqlParameter("@Id", bookDto.Id)
             ).ToList().FirstOrDefault();
     
             if (book == null)
             {
                 ViewBag.ErrorMessage = "Book not found.";
+                populateAuthorsInViewBag();
                 return View("Index");
             }
         
+            populateAuthorsInViewBag();
             return View( new BookDto
             {
                 Id = book.Id,
                 Title = book.Title,
-                Author = book.Author,
+                AuthorId = book.AuthorId,
                 Rating = book.Rating,
                 PublicationDate = book.PublicationDate,
                 Genre = book.Genre
@@ -103,28 +112,29 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> UpdateBookDetail(BookDto bookDto)
         {
-            if (bookDto == null || string.IsNullOrEmpty(bookDto.Title) || string.IsNullOrEmpty(bookDto.Author))
+            if (bookDto == null || string.IsNullOrEmpty(bookDto.Title) || bookDto.AuthorId == 0)
             {
                 ViewBag.ErrorMessage = "Title and Author are required";
+                populateAuthorsInViewBag();
                 return View("UpdateBook", bookDto);
             }
 
             var book = _context.Database.SqlQueryRaw<BookDto>(
-                "SELECT * FROM Books WHERE Id = {0}",
+                "SELECT Id, Title, Genre, PublicationDate, Rating, AuthorId, NULL AS AuthorName FROM Books WHERE Id = {0}",
                 new SqlParameter("@Id", bookDto.Id)
             ).ToList().FirstOrDefault();
 
             if (book == null)
             {
                 ViewBag.ErrorMessage = "Book not found.";
+                populateAuthorsInViewBag();
                 return View("UpdateBook", bookDto);
             }
-    
 
             _context.Database.ExecuteSqlRaw(
-                "UPDATE Books SET Title = {0}, Author = {1}, Genre = {2}, PublicationDate = {3}, Rating = {4} WHERE Id = {5}",
+                "UPDATE Books SET Title = {0}, AuthorID = {1}, Genre = {2}, PublicationDate = {3}, Rating = {4} WHERE Id = {5}",
                 new SqlParameter("@Title", bookDto.Title),
-                new SqlParameter("@Author", bookDto.Author),
+                new SqlParameter("@AuthorId", bookDto.AuthorId),
                 new SqlParameter("@Genre", bookDto.Genre),
                 new SqlParameter("@PublicationDate", bookDto.PublicationDate),
                 new SqlParameter("@Rating", bookDto.Rating),
@@ -133,6 +143,11 @@ namespace LibraryManagementSystem.Controllers
             TempData["SuccessMessage"] = "Book updated successfully.";
             return RedirectToAction("Index");
         }  
-
+        private void populateAuthorsInViewBag()
+        {
+            ViewBag.Authors = _context.Database.SqlQueryRaw<AuthorDto>(
+                "SELECT * FROM Authors"
+            ).ToList();
+        }
     }
 }

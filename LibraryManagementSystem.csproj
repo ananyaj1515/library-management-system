@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Data/" />
     <Folder Include="Dto/" />
+    <Folder Include="Queries/" />
     <Folder Include="Views/Auth/" />
     <Folder Include="Views/Author/" />
     <Folder Include="Views/Book/" />
