@@ -13,9 +13,15 @@
             <input type="text" class="form-control" id="title" name="title" asp-for="Title" placeholder="@Model.Title" required>
         </div>
 
-        <div class="mb-3">
-            <label for="author" class="form-label">Author</label>
-            <input type="text" class="form-control" id="author" name="author" asp-for="Author" placeholder="@Model.Author" required>
+        <div class="form-group mb-3">
+            <label for="authorId" class="form-label">Author</label>
+            <select class="form-control" id="authorId" name="authorId" asp-for="AuthorId" required>
+                <option value="">Select Author</option>
+                @foreach (var author in ViewBag.Authors)
+                {
+                    <option value="@author.Id">@author.Name</option>
+                }
+            </select>
         </div>
         
         <div class="mb-3">

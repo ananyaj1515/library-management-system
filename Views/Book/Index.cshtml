@@ -18,6 +18,7 @@
                     <th>Genre</th>
                     <th>Publication Date</th>
                     <th>Author</th>
+                    <th>Rating</th> 
                     <th style="width: 150px;">Actions</th>
                 </tr>
             </thead>
@@ -28,10 +29,11 @@
                         foreach (BookDto book in Model)
                         {
                             <tr>
-                                <td>@book.Title</td>
+                                <td><b>@book.Title</b></td>
                                 <td>@book.Genre</td>
                                 <td>@book.PublicationDate</td>
-                                <td>@book.Author</td>
+                                <td>@book.AuthorName</td>
+                                <td>@book.Rating</td>
                                 <td>
                                     <a class="btn btn-sm btn-primary" asp-action="UpdateBook" asp-route-id="@book.Id">Edit </a>
                                     <a class="btn btn-sm btn-danger" asp-action="DeleteBook" asp-route-id="@book.Id">Delete</a>
@@ -42,12 +44,11 @@
                     else
                     {
                         <tr>
-                            <td colspan="5" class="text-center">No books found.</td>
+                            <td colspan="6" class="text-center">No books found.</td>
                         </tr>
                     }
                 }                
             </tbody>
         </table>
     </div>
-
 </div>

@@ -22,10 +22,15 @@
             <input type="date" class="form-control" id="publicationDate" name="publicationDate" asp-for="PublicationDate" required>
         </div>
 
-        <div class="mb-3">
-            <label for="author" class="form-label">Author</label>
-            <input type="text" class="form-control" id="author" name="author" asp-for="Author" placeholder="Enter author" required>
-
+        <div class="form-group mb-3">
+            <label for="authorId" class="form-label">Author</label>
+            <select class="form-control" id="authorId" name="authorId" asp-for="AuthorId" required>
+                <option value="">Select Author</option>
+                @foreach (var author in ViewBag.Authors)
+                {
+                    <option value="@author.Id">@author.Name</option>
+                }
+            </select>
         </div>
         
         <div class="mb-3">

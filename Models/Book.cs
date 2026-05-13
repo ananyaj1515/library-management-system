@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace LibraryManagementSystem.Models
@@ -12,7 +11,7 @@ namespace LibraryManagementSystem.Models
         public DateTime PublicationDate { get; set; }
 
         public decimal Rating { get; set; } = 0.0m;
-        public string Author { get; set; } = null!;
+        public int AuthorId { get; set; }
 
     }
 }
