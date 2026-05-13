@@ -79,14 +79,17 @@ namespace LibraryManagementSystem.Controllers
         }
 
         public async Task<IActionResult> UpdateBook(BookDto bookDto) {
-           var book = _context.Books.FirstOrDefault(b => b.Id == bookDto.Id);
+            var book = _context.Database.SqlQueryRaw<BookDto>(
+                "SELECT * FROM Books WHERE Id = {0}",
+                new SqlParameter("@Id", bookDto.Id)
+            ).ToList().FirstOrDefault();
     
             if (book == null)
             {
                 ViewBag.ErrorMessage = "Book not found.";
                 return View("Index");
             }
-            else
+        
             return View( new BookDto
             {
                 Id = book.Id,
@@ -106,21 +109,27 @@ namespace LibraryManagementSystem.Controllers
                 return View("UpdateBook", bookDto);
             }
 
-            var book = _context.Books.FirstOrDefault(b => b.Id == bookDto.Id);
+            var book = _context.Database.SqlQueryRaw<BookDto>(
+                "SELECT * FROM Books WHERE Id = {0}",
+                new SqlParameter("@Id", bookDto.Id)
+            ).ToList().FirstOrDefault();
+
             if (book == null)
             {
                 ViewBag.ErrorMessage = "Book not found.";
                 return View("UpdateBook", bookDto);
             }
-           
-            book.Title = bookDto.Title;
-            book.Author = bookDto.Author;   
-            book.Rating = bookDto.Rating;
-            book.PublicationDate = bookDto.PublicationDate;
-            book.Genre = bookDto.Genre;
+    
 
-            _context.Books.Update(book);
-            await _context.SaveChangesAsync();
+            _context.Database.ExecuteSqlRaw(
+                "UPDATE Books SET Title = {0}, Author = {1}, Genre = {2}, PublicationDate = {3}, Rating = {4} WHERE Id = {5}",
+                new SqlParameter("@Title", bookDto.Title),
+                new SqlParameter("@Author", bookDto.Author),
+                new SqlParameter("@Genre", bookDto.Genre),
+                new SqlParameter("@PublicationDate", bookDto.PublicationDate),
+                new SqlParameter("@Rating", bookDto.Rating),
+                new SqlParameter("@Id", bookDto.Id)
+            );
             TempData["SuccessMessage"] = "Book updated successfully.";
             return RedirectToAction("Index");
         }  
