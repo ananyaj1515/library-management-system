@@ -8,8 +8,9 @@
         <h3 class="text-center mb-4">Update Book</h3>
         <input type="hidden" asp-for="Id" />
 
-        <div class="mb-3">
+        <div class="mb-3 d-flex flex-column>
             <label for="title" class="form-label">Title</label>
+            <span asp-validation-for="Title" class="text-danger"></span>
             <input type="text" class="form-control" id="title" name="title" asp-for="Title" placeholder="@Model.Title" required>
         </div>
 
@@ -24,18 +25,21 @@
             </select>
         </div>
         
-        <div class="mb-3">
-            <label for="rating" class="form-label">Rating</label>
-            <input type="number" class="form-control" id="rating" name="rating" asp-for="Rating" placeholder="@Model.Rating" required>
+        <div class="mb-3 d-flex flex-column>
+             <label for="rating" class="form-label">Rating</label>
+            <span asp-validation-for="Rating" class="text-danger"></span>
+            <input type="number" step="0.01" class="form-control" id="rating" name="rating" asp-for="Rating" placeholder="@Model.Rating" required>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 d-flex flex-column>
             <label for="publicationDate" class="form-label">Publication Date</label>
+            <span asp-validation-for="PublicationDate" class="text-danger"></span>
             <input type="date" class="form-control" id="publicationDate" name="publicationDate" asp-for="PublicationDate" placeholder="@Model.PublicationDate" required>
         </div>
 
-        <div class="mb-3">
-            <label for="genre" class="form-label">Genre</label>
+        <div class="mb-3 d-flex flex-column>
+             <label for="genre" class="form-label">Genre</label>
+            <span asp-validation-for="Genre" class="text-danger"></span>
             <input type="text" class="form-control" id="genre" name="genre" asp-for="Genre" placeholder="@Model.Genre" required>
         </div>
 

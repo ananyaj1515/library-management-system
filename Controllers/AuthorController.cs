@@ -13,7 +13,11 @@ namespace LibraryManagementSystem.Controllers
 
         {
             var authors = _context.Database.SqlQueryRaw<AuthorDto>(
-                "SELECT Id, Name, Rating, Bio, Email FROM Authors"
+                "SELECT a.Id, a.Name, a.Rating, a.Bio, a.Email, COALESCE(COUNT(b.Id), 0) AS NumBooks " 
+                + "FROM Authors a " 
+                + "LEFT JOIN Books b "
+                + "ON b.AuthorID = a.Id "
+                + "GROUP BY a.Name, a.Rating, a.Bio, a.Email, a.Id"
             ).ToList();
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
             return View(authors);
@@ -33,7 +37,7 @@ namespace LibraryManagementSystem.Controllers
             }
 
             var existingAuthor = _context.Database.SqlQueryRaw<AuthorDto>(
-                "SELECT * FROM Authors WHERE Email = {0}", 
+                "SELECT Id, Name, Rating, Bio, Email, NULL AS NumBooks FROM Authors WHERE Email = {0}", 
                 new SqlParameter("@Email", authorDto.Email)
             ).ToList();
 
@@ -79,7 +83,7 @@ namespace LibraryManagementSystem.Controllers
         public async Task<IActionResult> UpdateAuthor(int id)
         {
             var author = _context.Database.SqlQueryRaw<AuthorDto>(
-                "SELECT * FROM Authors WHERE Id = {0}",
+                 "SELECT Id, Name, Rating, Bio, Email, NULL AS NumBooks FROM Authors WHERE Id = {0}", 
                 new SqlParameter("@Id", id)
             ).ToList().FirstOrDefault();
 
@@ -108,7 +112,7 @@ namespace LibraryManagementSystem.Controllers
             }
 
             var author = _context.Database.SqlQueryRaw<AuthorDto>(
-                "SELECT * FROM Authors WHERE Id = {0}",
+                 "SELECT Id, Name, Rating, Bio, Email, NULL AS NumBooks FROM Authors WHERE Id = {0}", 
                 new SqlParameter("@Id", authorDto.Id)
             ).ToList().FirstOrDefault();
 

@@ -1,6 +1,8 @@
 using LibraryManagementSystem.Data;
+using LibraryManagementSystem.Dto;
 using LibraryManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.Controllers
@@ -8,7 +10,7 @@ namespace LibraryManagementSystem.Controllers
     public class SummaryController(AppDbContext _context) : Controller
     {
         // GET: SummaryController
-        public ActionResult Index()
+        public ActionResult Index(int? AuthorId)
         {
             var summary = new Summary
             {
@@ -32,7 +34,19 @@ namespace LibraryManagementSystem.Controllers
                     "SELECT TOP 1 Title AS Value FROM Books ORDER BY Rating DESC"
                 ).FirstOrDefault(),
 
+                Authors = _context.Database.SqlQueryRaw<AuthorDto>(
+                "SELECT * FROM Authors"
+                ).ToList(),
+
+                BookForAuthor = AuthorId.HasValue 
+                                ? _context.Database.SqlQueryRaw<BookDto>(
+                                    "SELECT Id, Title, Genre, PublicationDate, Rating, AuthorId, NULL AS AuthorName FROM Books WHERE AuthorId = {0}",
+                                    new SqlParameter("@AuthorID", AuthorId)
+                                ).ToList()
+                                : new List<BookDto>()
             };
+
+            
             return View(summary);
         }
 
