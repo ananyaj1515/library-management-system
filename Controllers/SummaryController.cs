@@ -35,7 +35,7 @@ namespace LibraryManagementSystem.Controllers
                 ).FirstOrDefault(),
 
                 Authors = _context.Database.SqlQueryRaw<AuthorDto>(
-                "SELECT * FROM Authors"
+                 "SELECT Id, Name, Rating, Bio, Email, NULL AS NumBooks FROM Authors" 
                 ).ToList(),
 
                 BookForAuthor = AuthorId.HasValue 
