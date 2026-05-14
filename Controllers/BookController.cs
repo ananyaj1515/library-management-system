@@ -31,7 +31,7 @@ namespace LibraryManagementSystem.Controllers
         {
            if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "Title and Author are required.";
+                ViewBag.ErrorMessage = "Incorrect/Missing Fields";
                 populateAuthorsInViewBag();
                 return View("AddBook");
             }
@@ -96,8 +96,10 @@ namespace LibraryManagementSystem.Controllers
                 populateAuthorsInViewBag();
                 return View("Index");
             }
+
         
             populateAuthorsInViewBag();
+            
             return View( new BookDto
             {
                 Id = book.Id,
@@ -111,7 +113,7 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> UpdateBookDetail(BookDto bookDto)
         {
-            if (bookDto == null || string.IsNullOrEmpty(bookDto.Title) || bookDto.AuthorId == 0)
+            if (!ModelState.IsValid)
             {
                 ViewBag.ErrorMessage = "Title and Author are required";
                 populateAuthorsInViewBag();
@@ -145,7 +147,7 @@ namespace LibraryManagementSystem.Controllers
         private void populateAuthorsInViewBag()
         {
             ViewBag.Authors = _context.Database.SqlQueryRaw<AuthorDto>(
-                "SELECT * FROM Authors"
+                "SELECT Id, Name, Rating, Bio, Email, NULL AS NumBooks FROM Authors"
             ).ToList();
         }
     }

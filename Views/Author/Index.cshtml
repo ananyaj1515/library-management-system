@@ -18,6 +18,7 @@
                     <th>Rating</th>
                     <th>Bio</th>
                     <th>Email</th>
+                    <th># of Books</th>
                     <th style="width: 150px;">Actions</th>
                 </tr>
             </thead>
@@ -32,6 +33,7 @@
                                 <td>@author.Rating</td>
                                 <td>@author.Bio</td>
                                 <td>@author.Email</td>
+                                <td>@author.NumBooks</td>
                                 <td>
                                     <a class="btn btn-sm btn-primary" asp-action="UpdateAuthor" asp-route-id="@author.Id">Edit </a>
                                     <a class="btn btn-sm btn-danger" asp-action="DeleteAuthor" asp-route-id="@author.Id">Delete</a>
