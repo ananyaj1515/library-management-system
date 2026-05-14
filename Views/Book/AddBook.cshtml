@@ -1,28 +1,32 @@
 @using LibraryManagementSystem.Dto
 @model BookDto
 <div>@ViewBag.ErrorMessage</div>
+<div asp-validation-summary="All" class="text-danger"></div>
 </div>
 <form class="container d-flex justify-content-center align-items-center" style="min-height: 100vh" asp-action="CreateBook">
     <div class="card p-4 shadow" style="width: 100%; max-width: 400px">
         
         <h3 class="text-center mb-4">Add Book</h3>
 
-        <div class="mb-3">
+        <div class="mb-3 d-flex flex-column">
             <label for="title" class="form-label">Title</label>
+            <span asp-validation-for="Title" class="text-danger"></span>
             <input type="text" class="form-control" id="title" name="title" asp-for="Title" placeholder="Enter title" required>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 d-flex flex-column">
             <label for="genre" class="form-label">Genre</label>
+            <span asp-validation-for="Genre" class="text-danger"></span>
             <input type="text" class="form-control" id="genre" name="genre" asp-for="Genre" placeholder="Enter genre" required>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 d-flex flex-column">
             <label for="publicationDate" class="form-label">Publication Date</label>
+            <span asp-validation-for="PublicationDate" class="text-danger"></span>
             <input type="date" class="form-control" id="publicationDate" name="publicationDate" asp-for="PublicationDate" required>
         </div>
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 d-flex flex-column">
             <label for="authorId" class="form-label">Author</label>
             <select class="form-control" id="authorId" name="authorId" asp-for="AuthorId" required>
                 <option value="">Select Author</option>
@@ -33,8 +37,9 @@
             </select>
         </div>
         
-        <div class="mb-3">
+        <div class="mb-3 d-flex flex-column">
             <label for="rating" class="form-label">Rating</label>
+            <span asp-validation-for="Rating" class="text-danger"></span>
             <input type="number" step="0.01" class="form-control" id="rating" name="rating" asp-for="Rating" placeholder="Enter rating" required>
         </div>
 

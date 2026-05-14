@@ -29,7 +29,7 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> CreateBook(BookDto bookDto)
         {
-           if (bookDto == null || string.IsNullOrEmpty(bookDto.Title) || bookDto.AuthorId == 0)
+           if (!ModelState.IsValid)
             {
                 ViewBag.ErrorMessage = "Title and Author are required.";
                 populateAuthorsInViewBag();
