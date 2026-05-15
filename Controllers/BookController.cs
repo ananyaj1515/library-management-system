@@ -147,7 +147,7 @@ namespace LibraryManagementSystem.Controllers
         private void populateAuthorsInViewBag()
         {
             ViewBag.Authors = _context.Database.SqlQueryRaw<AuthorDto>(
-                "SELECT Id, Name, Rating, Bio, Email, NULL AS NumBooks FROM Authors"
+                "EXEC GetAuthors"
             ).ToList();
         }
     }

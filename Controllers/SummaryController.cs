@@ -45,8 +45,7 @@ namespace LibraryManagementSystem.Controllers
                                 ).ToList()
                                 : new List<BookDto>()
             };
-
-            
+ 
             return View(summary);
         }
 
